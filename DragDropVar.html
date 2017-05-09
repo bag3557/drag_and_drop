@@ -1,0 +1,210 @@
+<!doctype html>
+<html>
+	<head>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="js/imageMapResizer.js"></script>
+		<script src="js/imageMapResizer.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<style>
+		
+.Draggable
+{
+width:100px;
+height:100px;
+background: red;
+border: 1px solid black;
+cursor: pointer;
+}
+
+	.Droppable
+	{
+	width:110px;
+	height:110px;
+	background: green;
+	border: 1px solid black;
+	}
+		th, td{
+		 padding: 50px;
+		text-align:center;
+		height:200px;
+		}
+
+
+
+
+				#drag_1{
+				line-height: 22px;
+				padding: 5px;
+				}
+					#drag_2{
+					 
+					padding-top: 31px;
+					}
+						#drag_3{
+						 
+						padding-top:38px;
+						}
+						#drag_4{
+						 
+						padding-top:38px;
+						}
+
+		</style>
+
+</head>
+	<body>
+
+		<table>
+  <tr>
+    <th id="dc_1"><div class="Draggable" index="1" id="drag_1" draggable="true" ondragstart="drag(event)" >A table header is defined with the</div></th>
+    <th id="dc_2"><div class="Draggable" index="2" id="drag_2" draggable="true" ondragstart="drag(event)">A table header</div></th>
+    <th id="dc_3"><div class="Draggable" index="3" id="drag_3" draggable="true" ondragstart="drag(event)">A table</div></th>
+    <th id="dc_4"><div class="Draggable" index="4" id="drag_4" draggable="true" ondragstart="drag(event)">A table fgg</div></th>
+  </tr>
+  
+<tr>
+    <td><div class="Droppable" index="1" id="Drop_1" ondrop="drop(event)" ondragover="allowDrop(event)"></div></td>
+    <td><div class="Droppable" index="2" id="Drop_2" ondrop="drop(event)" ondragover="allowDrop(event)"></div></td>
+    <td><div class="Droppable" index="3" id="Drop_3" ondrop="drop(event)" ondragover="allowDrop(event)"></div></td>
+    <td><div class="Droppable" index="4" id="Drop_4" ondrop="drop(event)" ondragover="allowDrop(event)"></div></td>
+  </tr>
+  <tr>
+	<td><input class="btn btn-primary" type="button" value="Reset" id="resetBtn" onClick="reset()" disabled/></td>
+	<td colspan=2 id="feedback"></td>
+	<td><input class="btn btn-primary" type="button" value="Submit" id="submitBtn" onClick="submit()" disabled/></td>
+  </tr>
+</table>
+
+		
+	</body>
+		
+
+
+<script>
+
+var currentDraggableIndex;
+var count=0;
+var isResetClicked=false;
+var isCorrectPlaced=[true,true,true,true];
+var numberOfDraggables=4;
+
+function allowDrop(ev) 
+         {
+          ev.preventDefault();
+         }
+
+function drag(ev)
+         {
+           ev.dataTransfer.setData("text", ev.target.id);
+   
+	   currentDraggableIndex = document.getElementById(ev.target.id).getAttribute("index");
+    
+	 }
+
+function drop(ev) 
+         {
+	   ev.preventDefault();
+	   var dropIndex = document.getElementById(ev.target.id).getAttribute("index");
+
+	   
+	     
+		var data = ev.dataTransfer.getData("text");
+		ev.target.appendChild(document.getElementById(data));
+		document.getElementById(data).style.backgroundColor = "yellow";	
+		document.getElementById(ev.target.id).style.border = "5px solid orange";
+		
+		count++;
+ 		
+		if(currentDraggableIndex!=dropIndex)
+			isCorrectPlaced[currentDraggableIndex-1]=false;
+		 
+	     
+	  if(count==numberOfDraggables)
+		{
+		  blink();
+		  document.getElementById("submitBtn").disabled = false;
+
+		}
+
+	
+         }
+
+	function blink()
+		{
+		 var time=300;
+
+		   for(var i=1;i<=100;i++)
+			{
+			
+                         time = time + 300;
+			if(i%2==0){
+			   	setTimeout(function(){ 
+				  if(isResetClicked==false)
+				     changeBorderColor("black");
+		                }, time);
+			    }
+			else
+			   {
+				setTimeout(function(){ 
+				  if(isResetClicked==false)
+				    changeBorderColor("orange");
+		                }, time);
+			   }
+		        }
+
+		}
+
+	function changeBorderColor(color){
+		for(var i=1;i<=numberOfDraggables;i++)
+				document.getElementById("Drop_"+i).style.border = "5px solid "+color;
+		}
+
+	 function reset(){
+			for(var i=1;i<=numberOfDraggables;i++)
+				{
+				  if(isCorrectPlaced[i-1]==false)
+				    {
+				       document.getElementById("dc_"+i).appendChild(document.getElementById("drag_"+i));
+				       isCorrectPlaced[i-1]=true;
+				       count--;
+				    }
+				}
+				isResetClicked=true;
+				document.getElementById("feedback").innerHTML="";
+				document.getElementById("feedback").style.backgroundColor = "white";
+				document.getElementById("resetBtn").disabled = true;
+				document.getElementById("submitBtn").disabled = true;
+
+
+			}
+
+	function submit(){
+				var alltrue=true;
+				for(var i=1;i<=numberOfDraggables;i++)
+                                {
+				 if(isCorrectPlaced[i-1]==false)
+					alltrue=false;
+                                }
+
+
+			    if(alltrue==true)
+				{
+				 document.getElementById("feedback").innerHTML="Succcess";
+				 document.getElementById("feedback").style.backgroundColor = "green";
+				}
+			    else
+				{	
+				document.getElementById("feedback").innerHTML="Failure";
+				document.getElementById("feedback").style.backgroundColor = "red";
+				document.getElementById("resetBtn").disabled = false;
+				}
+			}
+
+
+
+
+
+
+</script>
+</html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+	<head>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="js/imageMapResizer.js"></script>
+		<script src="js/imageMapResizer.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<style>
+		
+.Draggable
+{
+width:100px;
+height:100px;
+background: red;
+border: 1px solid black;
+cursor: pointer;
+}
+
+	.Droppable
+	{
+	width:100px;
+	height:100px;
+	background: green;
+	border: 1px solid black;
+	}
+		th, td{
+		 padding: 50px;
+		text-align:center;
+		height:200px;
+		}
+
+
+
+
+				#first{
+				line-height: 22px;
+				padding: 5px;
+				}
+					#second{
+					 
+					padding-top: 31px;
+					}
+						#third{
+						 
+						padding-top:38px;
+						}
+
+		</style>
+
+</head>
+	<body>
+
+		<table>
+  <tr>
+    <th><div class="Draggable" index="1" id="first" draggable="true" ondragstart="drag(event)" >A table header is defined with the</div></th>
+    <th><div class="Draggable" index="2" id="second" draggable="true" ondragstart="drag(event)">A table header</div></th>
+    <th><div class="Draggable" index="3" id="third" draggable="true" ondragstart="drag(event)">A table</div></th>
+  </tr>
+  
+<tr>
+    <td><div class="Droppable" index="1" id="DropFirst" ondrop="drop(event)" ondragover="allowDrop(event)"></div></td>
+    <td><div class="Droppable" index="2" id="DropSecond" ondrop="drop(event)" ondragover="allowDrop(event)"></div></td>
+    <td><div class="Droppable" index="3" id="DropThird" ondrop="drop(event)" ondragover="allowDrop(event)"></div></td>
+  </tr>
+  
+</table>
+
+		
+	</body>
+		
+
+
+<script>
+
+	$(document).ready(function() {
+    		
+	});
+
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+	var dragIndex = document.getElementById(ev.target.id).getAttribute("index");
+	ev.dataTransfer.setData("index", dragIndex);
+	
+	
+}
+
+function drop(ev) {
+	
+	
+    ev.preventDefault();
+    var dropIndex = document.getElementById(ev.target.id).getAttribute("index");
+    var dragIndex = ev.dataTransfer.getData("index");
+
+		if(dragIndex == dropIndex)
+		{
+		var data = ev.dataTransfer.getData("text");
+		  ev.target.appendChild(document.getElementById(data));
+		}
+	
+}
+
+
+
+</script>
+</html>
